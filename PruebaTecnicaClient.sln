@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "PruebaTecnicaClient", "PruebaTecnicaClient\PruebaTecnicaClient.esproj", "{6F55E25A-7A41-4D70-BA2A-2A7CEEE26E15}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F55E25A-7A41-4D70-BA2A-2A7CEEE26E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F55E25A-7A41-4D70-BA2A-2A7CEEE26E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F55E25A-7A41-4D70-BA2A-2A7CEEE26E15}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6F55E25A-7A41-4D70-BA2A-2A7CEEE26E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F55E25A-7A41-4D70-BA2A-2A7CEEE26E15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F55E25A-7A41-4D70-BA2A-2A7CEEE26E15}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

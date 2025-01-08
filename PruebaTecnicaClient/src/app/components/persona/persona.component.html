@@ -1,0 +1,66 @@
+<div class="persona-container">
+  <h2>Lista de Personas</h2>
+
+  <!-- Formulario para crear o editar persona -->
+  <div *ngIf="editing">
+    <h3>Editar Persona</h3>
+  </div>
+  <div *ngIf="!editing">
+    <h3>Crear Persona</h3>
+  </div>
+
+  <form (ngSubmit)="editing ? updatePersona() : createPersona()">
+    <label for="nombre">Nombres:</label>
+    <input type="text" id="nombre" [(ngModel)]="persona.Nombres" name="nombre" required>
+
+    <label for="apellido">Apellidos:</label>
+    <input type="text" id="apellido" [(ngModel)]="persona.Apellidos" name="apellido" required>
+
+    <label for="Identificacion">Identificacion:</label>
+    <input type="text" id="Identificacion" [(ngModel)]="persona.Identificacion" name="Identificacion" required>
+
+    <label for="Email">Email:</label>
+    <input type="text" id="Email" [(ngModel)]="persona.Email" name="Email" required>
+
+    <label for="tipoIdentificacion">Tipo de identificación:</label>
+    <select id="tipoIdentificacion" [(ngModel)]="persona.TipoIdentificacion" name="tipoIdentificacion" required>
+      <option value="">Selecciona un tipo de identificación</option>
+      <option value="Cedula">Cédula</option>
+      <option value="Pasaporte">Pasaporte</option>
+      <option value="RUC">RUC</option>
+      <!-- Puedes agregar más tipos de identificación aquí -->
+    </select>
+
+    <label for="Usuario">Usuario:</label>
+    <input type="text" id="Usuario" [(ngModel)]="persona.Usuario" name="Usuario" required>
+
+    <label for="pass">Contraseña:</label>
+    <input type="password" id="pass" [(ngModel)]="persona.Pass" name="pass" required>
+
+    <button type="submit">{{ editing ? 'Actualizar' : 'Crear' }}</button>
+  </form>
+
+  <!-- Mostrar la lista de personas -->
+  <table>
+    <thead>
+      <tr>
+        <th>NombreCompleto</th>
+        <th>Identificacion</th>
+        <th>Email</th>
+        <th>Usuario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let persona of personas">
+        <td>{{ persona.NombreCompleto }}</td>
+        <td>{{ persona.Identificacion }}</td>
+        <td>{{ persona.Email }}</td>
+        <td>{{ persona.Usuario }}</td>
+        <td>
+          <button (click)="editPersona(persona)">Editar</button>
+          <button (click)="deletePersona(persona.idPersona)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
