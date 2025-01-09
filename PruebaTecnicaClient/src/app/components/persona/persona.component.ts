@@ -23,8 +23,21 @@ export class PersonaComponent implements OnInit {
     NombreCompleto: ''
   };
   editing: boolean = false;
+  showModal: boolean = false;
+  errorMessage: string = '';
 
   constructor(private personaService: PersonaService, private router: Router) { }
+
+  openForm(persona: any = null) {
+    this.persona = persona ? { ...persona } : {};
+    this.editing = !!persona;
+    this.showModal = true;
+  }
+
+  closeForm() {
+    this.errorMessage = ''
+    this.showModal = false;
+  }
 
   ngOnInit(): void {
     this.getPersonas();
@@ -39,7 +52,7 @@ export class PersonaComponent implements OnInit {
     }
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}` // O el formato que requiera tu backend
+      Authorization: `Bearer ${token}` 
     });
 
     this.personaService.getPersonas(headers).subscribe({
@@ -62,12 +75,12 @@ export class PersonaComponent implements OnInit {
     }
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}` // O el formato que requiera tu backend
+      Authorization: `Bearer ${token}` 
     });
 
     this.personaService.createPersona(this.persona, headers).subscribe({
       next: () => {
-        this.getPersonas();  // Actualizar la lista de personas
+        this.getPersonas(); 
         this.persona = {
           idPersona: 0,
           Nombres: '',
@@ -78,12 +91,14 @@ export class PersonaComponent implements OnInit {
           Usuario: '',
           Pass: '',
           NombreCompleto: ''
-        }; // Limpiar el formulario
+        }; 
+        this.closeForm();
       },
       error: (err) => {
-        console.error('Error al crear persona:', err);
+        this.errorMessage = err;
       }
     });
+
   }
 
   // Editar persona
@@ -102,12 +117,12 @@ export class PersonaComponent implements OnInit {
     }
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}` // O el formato que requiera tu backend
+      Authorization: `Bearer ${token}` 
     });
 
     this.personaService.updatePersona(this.persona, headers).subscribe({
       next: () => {
-        this.getPersonas(); // Actualizar la lista
+        this.getPersonas(); 
         this.persona = {
           idPersona: 0,
           Nombres: '',
@@ -118,10 +133,13 @@ export class PersonaComponent implements OnInit {
           Usuario: '',
           Pass: '',
           NombreCompleto: ''
-        }; // Limpiar el formulario
+        }; 
         this.editing = false;
+        this.closeForm();
       },
       error: (err) => {
+        this.errorMessage = err.error.message;
+
         console.error('Error al actualizar persona:', err);
       }
     });
@@ -137,15 +155,20 @@ export class PersonaComponent implements OnInit {
     }
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}` // O el formato que requiera tu backend
+      Authorization: `Bearer ${token}` 
     });
     this.personaService.deletePersona(idPersona, headers).subscribe({
       next: () => {
-        this.getPersonas(); // Actualizar la lista
+        this.getPersonas(); 
       },
       error: (err) => {
         console.error('Error al eliminar persona:', err);
       }
     });
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 }

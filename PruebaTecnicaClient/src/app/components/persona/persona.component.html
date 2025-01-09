@@ -1,66 +1,155 @@
 <div class="persona-container">
-  <h2>Lista de Personas</h2>
+  <div class="centered-container">
+    <h2>Personas</h2>
 
-  <!-- Formulario para crear o editar persona -->
-  <div *ngIf="editing">
-    <h3>Editar Persona</h3>
+    <div class="action-bar">
+      <button (click)="openForm()">Crear Persona</button>
+      <button class="logaut" (click)="logout()">Cerrar Sesión</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre Completo</th>
+            <th>Identificación</th>
+            <th>Email</th>
+            <th>Usuario</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let persona of personas">
+            <td>{{ persona.NombreCompleto }}</td>
+            <td>{{ persona.Identificacion }}</td>
+            <td>{{ persona.Email }}</td>
+            <td>{{ persona.Usuario }}</td>
+            <td>
+              <button (click)="openForm(persona)">Editar</button>
+              <button (click)="deletePersona(persona.idPersona)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div *ngIf="!editing">
-    <h3>Crear Persona</h3>
+
+    <!-- Modal del formulario -->
+  <div class="modal" [class.show]="showModal">
+    <div class="modal-content">
+      <span class="close" (click)="closeForm()">&times;</span>
+      <h3>{{ editing ? 'Editar Persona' : 'Crear Persona' }}</h3>
+
+      <form #personaForm="ngForm" (ngSubmit)="editing ? updatePersona() : createPersona()">
+        
+        <div class="form-group">
+          <label for="nombre">Nombres:</label>
+          <input type="text"
+                 id="nombre"
+                 [(ngModel)]="persona.Nombres"
+                 name="nombre"
+                 required
+                 #nombre="ngModel" />
+          <div *ngIf="nombre.invalid && nombre.touched" class="error">
+            <small>El nombre es obligatorio.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+
+          <label for="apellido">Apellidos:</label>
+          <input type="text"
+                 id="apellido"
+                 [(ngModel)]="persona.Apellidos"
+                 name="apellido"
+                 required
+                 #apellido="ngModel" />
+          <div *ngIf="apellido.invalid && apellido.touched" class="error">
+            <small>El apellido es obligatorio.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="Identificacion">Identificación:</label>
+          <input type="text"
+                 id="Identificacion"
+                 [(ngModel)]="persona.Identificacion"
+                 name="Identificacion"
+                 required
+                 #identificacion="ngModel" />
+          <div *ngIf="identificacion.invalid && identificacion.touched" class="error">
+            <small>La identificación es obligatoria.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoIdentificacion">Tipo de identificación:</label>
+          <select id="tipoIdentificacion"
+                  [(ngModel)]="persona.TipoIdentificacion"
+                  name="tipoIdentificacion"
+                  required
+                  #tipoIdentificacion="ngModel">
+            <option value="">Selecciona un tipo de identificación</option>
+            <option value="Cedula">Cédula</option>
+            <option value="Pasaporte">Pasaporte</option>
+            <option value="RUC">RUC</option>
+          </select>
+          <div *ngIf="tipoIdentificacion.invalid && tipoIdentificacion.touched" class="error">
+            <small>El tipo de identificación es obligatorio.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="Email">Email:</label>
+          <input type="email"
+                 id="Email"
+                 [(ngModel)]="persona.Email"
+                 name="Email"
+                 required
+                 pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                 #email="ngModel" />
+          <div *ngIf="email.invalid && email.touched" class="error">
+            <small *ngIf="email.errors?.['required']">El correo es obligatorio.</small>
+            <small *ngIf="email.errors?.['pattern']">El formato del correo no es válido.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="Usuario">Usuario:</label>
+          <input type="text"
+                 id="Usuario"
+                 [(ngModel)]="persona.Usuario"
+                 name="Usuario"
+                 required
+                 #usuario="ngModel" />
+          <div *ngIf="usuario.invalid && usuario.touched" class="error">
+            <small>El usuario es obligatorio.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="pass">Contraseña:</label>
+          <input type="password"
+                 id="pass"
+                 [(ngModel)]="persona.Pass"
+                 name="pass"
+                 required
+                 #pass="ngModel" />
+          <div *ngIf="pass.invalid && pass.touched" class="error">
+            <small>La contraseña es obligatoria.</small>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="personaForm.invalid">
+            {{ editing ? 'Actualizar' : 'Crear' }}
+          </button>
+          <button type="button" (click)="closeForm()">Cancelar</button>
+        </div>
+      </form>
+      <div *ngIf="errorMessage" class="error">
+        {{ errorMessage }}
+      </div>
+    </div>
   </div>
-
-  <form (ngSubmit)="editing ? updatePersona() : createPersona()">
-    <label for="nombre">Nombres:</label>
-    <input type="text" id="nombre" [(ngModel)]="persona.Nombres" name="nombre" required>
-
-    <label for="apellido">Apellidos:</label>
-    <input type="text" id="apellido" [(ngModel)]="persona.Apellidos" name="apellido" required>
-
-    <label for="Identificacion">Identificacion:</label>
-    <input type="text" id="Identificacion" [(ngModel)]="persona.Identificacion" name="Identificacion" required>
-
-    <label for="Email">Email:</label>
-    <input type="text" id="Email" [(ngModel)]="persona.Email" name="Email" required>
-
-    <label for="tipoIdentificacion">Tipo de identificación:</label>
-    <select id="tipoIdentificacion" [(ngModel)]="persona.TipoIdentificacion" name="tipoIdentificacion" required>
-      <option value="">Selecciona un tipo de identificación</option>
-      <option value="Cedula">Cédula</option>
-      <option value="Pasaporte">Pasaporte</option>
-      <option value="RUC">RUC</option>
-      <!-- Puedes agregar más tipos de identificación aquí -->
-    </select>
-
-    <label for="Usuario">Usuario:</label>
-    <input type="text" id="Usuario" [(ngModel)]="persona.Usuario" name="Usuario" required>
-
-    <label for="pass">Contraseña:</label>
-    <input type="password" id="pass" [(ngModel)]="persona.Pass" name="pass" required>
-
-    <button type="submit">{{ editing ? 'Actualizar' : 'Crear' }}</button>
-  </form>
-
-  <!-- Mostrar la lista de personas -->
-  <table>
-    <thead>
-      <tr>
-        <th>NombreCompleto</th>
-        <th>Identificacion</th>
-        <th>Email</th>
-        <th>Usuario</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let persona of personas">
-        <td>{{ persona.NombreCompleto }}</td>
-        <td>{{ persona.Identificacion }}</td>
-        <td>{{ persona.Email }}</td>
-        <td>{{ persona.Usuario }}</td>
-        <td>
-          <button (click)="editPersona(persona)">Editar</button>
-          <button (click)="deletePersona(persona.idPersona)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  </div>
